@@ -1,0 +1,47 @@
+---
+import { href, nav, tr, type Lang } from '../lib/i18n';
+import { company } from '../data/site';
+import { services } from '../data/services';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = tr(lang);
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a class="brand" href={href(lang)}>
+          <svg viewBox="0 0 32 32" aria-hidden="true" width="40" height="40"><rect width="32" height="32" fill="#EFEDE8" /><path d="M7 25V7h10a6 6 0 0 1 2 11.6L25 25h-5l-5-5.5H12V25z M12 11v5h5a2.5 2.5 0 0 0 0-5z" fill="#1C1D1F" /><rect x="22" y="6" width="4" height="4" fill="#B8471E" /></svg>
+          <span><b>{company.short[lang]}</b><small>{t('للمقاولات', 'CONTRACTING')}</small></span>
+        </a>
+        <p style="margin-block-start:16px;max-width:34ch">{t('مقاولات عامة وتشطيبات وبنية تحتية. مقرنا في الرياض منذ عام 2009.', 'General contracting, fit-out and infrastructure. Headquartered in Riyadh since 2009.')}</p>
+      </div>
+      <div>
+        <h2>{t('الموقع', 'Sitemap')}</h2>
+        <ul>
+          {nav.map((n) => <li><a href={href(lang, n.key)}>{n[lang]}</a></li>)}
+          <li><a href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>{t('خدماتنا', 'Services')}</h2>
+        <ul>
+          {services.map((s) => <li><a href={href(lang, `services/#${s.id}`)}>{s.title[lang]}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>{t('تواصل', 'Contact')}</h2>
+        <ul>
+          <li><a href={`tel:${company.tel}`}><span class="ltr">{company.phone}</span></a></li>
+          <li><a href={company.whatsapp} rel="noopener" target="_blank">{t('واتساب', 'WhatsApp')}</a></li>
+          <li><a href={`mailto:${company.email}`}>{company.email}</a></li>
+          <li>{company.hours[lang]}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-note">
+      <span>&copy; 2026 {company.name[lang]}</span>
+      <span>{company.disclaimer[lang]}</span>
+    </div>
+  </div>
+</footer>

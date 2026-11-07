@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE, href, asset, other, dir, tr, type Lang } from '../lib/i18n';
+import { company } from '../data/site';
+import { imgUrl } from '../data/images';
+
+interface Props { lang: Lang; title: string; description: string; path?: string; noindex?: boolean }
+const { lang, title, description, path = '', noindex = false } = Astro.props;
+const t = tr(lang);
+const full = `${title} | ${company.name[lang]}`;
+const canonical = SITE + href(lang, path);
+const alt = other(lang);
+const og = imgUrl('heroCranes', 1200);
+---
+<!doctype html>
+<html lang={lang} dir={dir(lang)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{full}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#1C1D1F" />
+    {!noindex && <link rel="canonical" href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang={lang} href={canonical} />}
+    {!noindex && <link rel="alternate" hreflang={alt} href={SITE + href(alt, path)} />}
+    {!noindex && <link rel="alternate" hreflang="x-default" href={SITE + href('ar', path)} />}
+    <link rel="icon" type="image/svg+xml" href={asset('favicon.svg')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={company.name[lang]} />
+    <meta property="og:title" content={full} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={og} />
+    <meta property="og:locale" content={lang === 'ar' ? 'ar_SA' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{t('تخطَّ إلى المحتوى', 'Skip to content')}</a>
+    <Header lang={lang} path={path} noCurrent={noindex} />
+    <main id="main" tabindex="-1"><slot /></main>
+    <Footer lang={lang} />
+    <button class="to-top" type="button" aria-label={t('العودة إلى الأعلى', 'Back to top')}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+    </button>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,113 @@
+---
+import Base from '../../../layouts/Base.astro';
+import Pic from '../../../components/Pic.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import { href, nf, locales, tr, type Lang } from '../../../lib/i18n';
+import { plural, monthForms } from '../../../lib/plural';
+import { imgUrl, imgSrcset } from '../../../data/images';
+import { projects, categories, cities, statuses, valueText } from '../../../data/projects';
+
+export function getStaticPaths() {
+  return locales.flatMap((lang) => projects.map((p) => ({ params: { lang, slug: p.slug }, props: { p } })));
+}
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+const { p } = Astro.props;
+const t = tr(lang);
+const related = projects.filter((x) => x.slug !== p.slug && (x.category === p.category || x.city === p.city)).slice(0, 3);
+const facts: [string, string][] = [
+  [t('النوع', 'Type'), categories[p.category][lang]],
+  [t('المدينة', 'City'), cities[p.city].name[lang]],
+  [t('القطاع', 'Sector'), p.sector[lang]],
+  [t('السنة', 'Year'), String(p.year)],
+  [t('المساحة', 'Built area'), `${nf(p.area)} ${t('م²', 'm²')}`],
+  [t('قيمة العقد', 'Contract value'), valueText(p, lang)],
+  [t('مدة التنفيذ', 'Duration'), plural(lang, p.months, monthForms[lang])],
+  [t('الحالة', 'Status'), statuses[p.status][lang]],
+];
+const summaryText = p.summary[lang];
+---
+<Base lang={lang} title={p.title[lang]} description={summaryText} path={`projects/${slug}/`}>
+  <section class="page-hero grid-lines" style="border:0;padding-block-end:24px">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><a href={href(lang, 'projects/')}>{t('مشاريعنا', 'Projects')}</a><span aria-hidden="true">/</span><span>{p.title[lang]}</span></nav>
+      <h1>{p.title[lang]}</h1>
+    </div>
+  </section>
+  <div class="wrap">
+    <Pic class="detail-cover" k={p.cover} alt={t(`صورة مشروع ${p.title.ar}`, `Photo of ${p.title.en}`)} w={16} h={8} eager sizes="(min-width: 1300px) 1280px, 100vw" />
+  </div>
+
+  <section class="section" style="padding-block-end:48px">
+    <div class="wrap detail">
+      <div>
+        <p class="lead" style="color:var(--ink)">{summaryText}</p>
+        <h2 style="font-size:1.5rem;margin-block:40px 8px">{t('نطاق العمل', 'Scope of work')}</h2>
+        <ol class="scope">{p.scope[lang].map((s) => <li>{s}</li>)}</ol>
+      </div>
+      <aside aria-label={t('بيانات المشروع', 'Project facts')}>
+        <h2 style="font-size:1.5rem;margin-block-end:12px">{t('بيانات المشروع', 'Key facts')}</h2>
+        <table class="facts-table" style="width:100%;border-collapse:collapse;border-block-start:2px solid var(--ink)">
+          <caption class="vh">{t('بيانات المشروع', 'Key facts')}</caption>
+          <tbody>
+            {facts.map(([k, v]) => (
+              <tr style="border-block-end:1px solid var(--rule)"><th scope="row" style="text-align:start;font-weight:400;color:var(--steel-ink);padding:12px 0">{k}</th><td style="font-weight:600;text-align:end;padding:12px 0">{v}</td></tr>
+            ))}
+          </tbody>
+        </table>
+        <a class="btn btn--accent" style="margin-block-start:24px;width:100%" href={href(lang, 'quote/')}>{t('اطلب مشروعاً مماثلاً', 'Request a similar project')}</a>
+      </aside>
+    </div>
+  </section>
+
+  {p.beforeAfter && (
+    <section class="section section--alt" aria-labelledby="ba-h">
+      <div class="wrap">
+        <div class="section-head"><p class="eyebrow">{t('قبل وبعد', 'Before and after')}</p><h2 id="ba-h" class="h2">{t('من المرحلة الأولى إلى التسليم', 'From the first stage to handover')}</h2></div>
+        <div class="ba" data-ba>
+          <img class="ba-after" src={imgUrl(p.beforeAfter.after, 1200)} srcset={imgSrcset(p.beforeAfter.after)} sizes="(min-width: 1300px) 1280px, 100vw" width="1600" height="900" alt={p.beforeAfter.afterLabel[lang]} loading="lazy" decoding="async" />
+          <img class="ba-before" src={imgUrl(p.beforeAfter.before, 1200)} srcset={imgSrcset(p.beforeAfter.before)} sizes="(min-width: 1300px) 1280px, 100vw" width="1600" height="900" alt={p.beforeAfter.beforeLabel[lang]} loading="lazy" decoding="async" />
+          <span class="ba-label ba-label--b">{p.beforeAfter.beforeLabel[lang]}</span>
+          <span class="ba-label ba-label--a">{p.beforeAfter.afterLabel[lang]}</span>
+          <span class="ba-line" aria-hidden="true"></span>
+          <input class="ba-range" type="range" min="0" max="100" value="50" aria-label={t(`قارن بين ${p.beforeAfter.beforeLabel.ar} و${p.beforeAfter.afterLabel.ar}`, `Compare ${p.beforeAfter.beforeLabel.en} and ${p.beforeAfter.afterLabel.en}`)} aria-valuetext="50%" />
+        </div>
+        <p class="fine">{t('حرّك المؤشر أو استخدم مفاتيح الأسهم للمقارنة. الصور توضيحية.', 'Drag the handle or use the arrow keys to compare. Images are illustrative.')}</p>
+      </div>
+    </section>
+  )}
+
+  <section class="section" aria-labelledby="gal-h">
+    <div class="wrap">
+      <div class="section-head"><h2 id="gal-h" class="h2">{t('معرض الصور', 'Gallery')}</h2></div>
+      <div class="gallery">
+        {p.gallery.map((k, i) => (
+          <button type="button" data-lb={i} data-full={imgUrl(k, 1800)} data-alt={`${p.title[lang]} (${i + 1}/${p.gallery.length})`} aria-label={t(`افتح الصورة ${i + 1} من ${p.gallery.length}`, `Open image ${i + 1} of ${p.gallery.length}`)} aria-haspopup="dialog">
+            <Pic k={k} alt="" w={4} h={3} sizes="(min-width: 700px) 25vw, 50vw" />
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <dialog class="lightbox" aria-label={t('معرض الصور', 'Image gallery')} data-lightbox data-close={t('إغلاق', 'Close')}>
+    <div class="lb-bar"><span data-lb-count aria-live="polite"></span><button class="lb-btn" type="button" data-lb-close aria-label={t('إغلاق', 'Close')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg></button></div>
+    <div class="lb-stage">
+      <button class="lb-btn" type="button" data-lb-prev aria-label={t('السابق', 'Previous')}><svg class="arrow flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+      <img alt="" data-lb-img />
+      <button class="lb-btn" type="button" data-lb-next aria-label={t('التالي', 'Next')}><svg class="arrow flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+    </div>
+    <p class="lb-cap" data-lb-cap></p>
+  </dialog>
+
+  {related.length > 0 && (
+    <section class="section section--alt" aria-labelledby="rel-h">
+      <div class="wrap">
+        <div class="section-head"><h2 id="rel-h" class="h2">{t('مشاريع ذات صلة', 'Related projects')}</h2></div>
+        <div class="p-grid">{related.map((r) => <ProjectCard project={r} lang={lang} />)}</div>
+      </div>
+    </section>
+  )}
+  <script>
+    import '../../../scripts/detail.ts';
+  </script>
+</Base>

@@ -1,0 +1,20 @@
+---
+import Pic from './Pic.astro';
+import { href, nf, type Lang } from '../lib/i18n';
+import { categories, cities, statuses, type Project } from '../data/projects';
+interface Props { project: Project; lang: Lang; filterable?: boolean; sizes?: string; delay?: number }
+const { project: p, lang, filterable = false, sizes = '(min-width: 960px) 33vw, (min-width: 580px) 50vw, 100vw', delay } = Astro.props;
+---
+<a class={`p-card ${delay !== undefined ? 'reveal' : ''}`} style={delay !== undefined ? `--d:${delay}s` : undefined} href={href(lang, `projects/${p.slug}/`)} data-card={filterable ? '' : undefined} data-cat={p.category} data-city={p.city} data-status={p.status}>
+  <div class="ph">
+    <Pic k={p.cover} alt="" w={4} h={3} sizes={sizes} />
+    <span class={`tag ${p.status === 'ongoing' ? 'tag--ongoing' : ''}`}>{statuses[p.status][lang]}</span>
+  </div>
+  <h3>{p.title[lang]}</h3>
+  <div class="meta">
+    <span>{categories[p.category][lang]}</span>
+    <span>{cities[p.city].name[lang]}</span>
+    <span>{p.year}</span>
+    <span>{nf(p.area)} {lang === 'ar' ? 'م²' : 'm²'}</span>
+  </div>
+</a>

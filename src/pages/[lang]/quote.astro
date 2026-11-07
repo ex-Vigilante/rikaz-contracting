@@ -1,0 +1,146 @@
+---
+import Base from '../../layouts/Base.astro';
+import Field from '../../components/Field.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+import { cities } from '../../data/projects';
+import { company } from '../../data/site';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+const types = [
+  ['commercial', t('مبنى تجاري أو مكتبي', 'Commercial or office building')],
+  ['villa', t('فيلا أو مجمع سكني', 'Villa or residential compound')],
+  ['fitout', t('تشطيب وديكور', 'Fit-out and interiors')],
+  ['infra', t('بنية تحتية وطرق', 'Infrastructure and roads')],
+  ['pm', t('إدارة مشروع', 'Project management')],
+  ['maintenance', t('صيانة', 'Maintenance')],
+];
+const cityOpts = [...Object.entries(cities).map(([k, v]) => [k, v.name[lang]]), ['other', t('مدينة أخرى', 'Another city')]];
+const budgets = [
+  ['lt10', t('أقل من 10 ملايين ر.س', 'Under SAR 10M')],
+  ['10-50', t('10 – 50 مليون ر.س', 'SAR 10 – 50M')],
+  ['50-100', t('50 – 100 مليون ر.س', 'SAR 50 – 100M')],
+  ['100+', t('أكثر من 100 مليون ر.س', 'Over SAR 100M')],
+  ['unknown', t('لم أحدد بعد', 'Not decided yet')],
+];
+const timelines = [
+  ['asap', t('في أقرب وقت', 'As soon as possible')],
+  ['3m', t('خلال 3 أشهر', 'Within 3 months')],
+  ['6m', t('خلال 6 أشهر', 'Within 6 months')],
+  ['later', t('بعد 6 أشهر', 'After 6 months')],
+];
+const stepNames = [t('نوع المشروع', 'Project'), t('الحجم والميزانية', 'Scope'), t('بيانات التواصل', 'Contact'), t('المراجعة والإرسال', 'Review')];
+---
+<Base lang={lang} title={t('اطلب عرض سعر', 'Request a quote')} description={t('اطلب عرض سعر مبدئي من رِكاز في ثلاث خطوات قصيرة ثم مراجعة: نوع المشروع، الحجم والميزانية، بيانات التواصل.', 'Request a preliminary quote from Rikaz in three short steps and a review: project type, scope and budget, contact details.')} path="quote/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('اطلب عرض سعر', 'Request a quote')}</span></nav>
+      <h1>{t('اطلب عرض سعر مبدئي', 'Request a preliminary quote')}</h1>
+      <p class="lead">{t('ثلاث خطوات قصيرة ثم مراجعة. نرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Three short steps, then review. We reply within three working days with an initial cost and duration estimate.')}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap quote-layout">
+      <div class="form-card">
+        <div data-notice class="notice" hidden>
+          <span>{t('استرجعنا المسودة المحفوظة على هذا الجهاز.', 'We restored the draft saved on this device.')}</span>
+          <button class="reset" type="button" data-clear-draft>{t('ابدأ من جديد', 'Start over')}</button>
+        </div>
+        <ol class="progress" aria-label={t('خطوات الطلب', 'Quote steps')} data-progress>
+          {stepNames.map((n, i) => <li><b>{String(i + 1).padStart(2, '0')}</b><span>{n}</span></li>)}
+        </ol>
+        <form novalidate data-quote data-demo-ref="RKZ-2026-" autocomplete="on" data-lang={lang} data-max-mb="10">
+          <fieldset data-step>
+            <h2 class="step-title" tabindex="-1">{t('ما نوع المشروع وأين موقعه؟', 'What kind of project, and where?')}</h2>
+            <div class="field">
+              <fieldset data-radio-group="type" data-label={t('نوع المشروع', 'Project type')} aria-describedby="type-err">
+                <legend>{t('نوع المشروع', 'Project type')}</legend>
+                <div class="type-grid" style="margin-block-start:8px">
+                  {types.map(([v, l]) => <label class="type-opt"><input type="radio" name="type" value={v} data-text={l} required /><span>{l}</span></label>)}
+                </div>
+              </fieldset>
+              <span class="err" id="type-err" role="alert"></span>
+            </div>
+            <Field as="select" id="city" label={t('المدينة', 'City')} required>
+              <option value="">{t('اختر المدينة', 'Select a city')}</option>
+              {cityOpts.map(([v, l]) => <option value={v}>{l}</option>)}
+            </Field>
+          </fieldset>
+
+          <fieldset data-step hidden>
+            <h2 class="step-title" tabindex="-1">{t('الحجم والميزانية والمدة', 'Size, budget and timeline')}</h2>
+            <div class="row2">
+              <Field id="area" label={t('المساحة التقريبية (م²)', 'Approximate area (m²)')} type="text" inputmode="decimal" rule="area" required ltr hint={t('تقدير أولي يكفي.', 'A rough estimate is fine.')} />
+              <Field as="select" id="budget" label={t('الميزانية التقديرية', 'Estimated budget')} required>
+                <option value="">{t('اختر النطاق', 'Select a range')}</option>
+                {budgets.map(([v, l]) => <option value={v}>{l}</option>)}
+              </Field>
+            </div>
+            <Field as="select" id="timeline" label={t('موعد البدء المطلوب', 'Desired start')} required>
+              <option value="">{t('اختر الموعد', 'Select a timeframe')}</option>
+              {timelines.map(([v, l]) => <option value={v}>{l}</option>)}
+            </Field>
+            <Field as="textarea" id="details" label={t('وصف مختصر', 'Short description')} optional={t('اختياري', 'optional')} />
+            <div class="field">
+              <label for="file">{t('مرفق', 'Attachment')} <span class="opt">({t('اختياري', 'optional')})</span></label>
+              <input id="file" name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.dwg" aria-describedby="file-hint file-info file-err" data-label={t('المرفق', 'Attachment')} data-rule="file" />
+              <span class="hint" id="file-hint">{t('PDF أو JPG أو PNG أو DWG، بحد أقصى 10 ميجابايت. يبقى الملف على جهازك ولا يُرفع.', 'PDF, JPG, PNG or DWG, up to 10 MB. The file stays on your device and is not uploaded.')}</span>
+              <span class="file-info" id="file-info" aria-live="polite"></span>
+              <span class="err" id="file-err" role="alert"></span>
+            </div>
+          </fieldset>
+
+          <fieldset data-step hidden>
+            <h2 class="step-title" tabindex="-1">{t('كيف نتواصل معك؟', 'How can we reach you?')}</h2>
+            <Field id="name" label={t('الاسم الكامل', 'Full name')} autocomplete="name" required />
+            <Field id="company" label={t('الشركة', 'Company')} optional={t('اختياري', 'optional')} autocomplete="organization" />
+            <div class="row2">
+              <Field id="phone" label={t('رقم الجوال', 'Mobile number')} type="tel" inputmode="tel" autocomplete="tel" rule="phone" required ltr placeholder="05XXXXXXXX" hint={t('مثال: 0501234567 أو \u200E+966501234567', 'Example: 0501234567 or +966501234567')} />
+              <Field id="email" label={t('البريد الإلكتروني', 'Email')} type="email" inputmode="email" autocomplete="email" rule="email" required ltr placeholder="name@company.com" />
+            </div>
+          </fieldset>
+
+          <fieldset data-step hidden>
+            <h2 class="step-title" tabindex="-1">{t('راجع طلبك قبل الإرسال', 'Review your request')}</h2>
+            <dl class="review" data-review></dl>
+            <div class="field" style="margin-block-start:24px">
+              <div class="check">
+                <input type="checkbox" id="consent" name="consent" required data-label={t('الموافقة', 'Consent')} aria-describedby="consent-err" />
+                <label for="consent">{t('أوافق على أن تتواصل معي رِكاز بخصوص هذا الطلب.', 'I agree that Rikaz may contact me about this request.')}</label>
+              </div>
+              <span class="err" id="consent-err" role="alert"></span>
+            </div>
+          </fieldset>
+
+          <div class="form-nav">
+            <button class="btn btn--line" type="button" data-prev hidden>{t('السابق', 'Back')}</button>
+            <button class="btn" type="button" data-next style="margin-inline-start:auto">{t('التالي', 'Next')}</button>
+            <button class="btn btn--accent" type="submit" data-submit hidden style="margin-inline-start:auto">{t('إرسال الطلب', 'Submit request')}</button>
+          </div>
+        </form>
+
+        <div class="success" data-success hidden tabindex="-1">
+          <span class="demo-tag">{t('نسخة تجريبية', 'Demo')}</span>
+          <h2 class="h2" style="margin-block-start:16px">{t('استلمنا طلبك', 'Request received')}</h2>
+          <span class="ref" data-ref></span>
+          <p class="lead" style="margin-inline:auto">{t('هذا عرض تجريبي: لم يُرسَل شيء ولم تُحفظ أي بيانات. في النسخة الفعلية ستصلك رسالة تأكيد ثم يتصل بك مهندس مختص.', 'This is a demo: nothing was sent and no data was stored. In a live version you would get a confirmation and a call from an estimator.')}</p>
+          <a class="btn" href={href(lang)}>{t('العودة إلى الرئيسية', 'Back to home')}</a>
+        </div>
+      </div>
+      <aside>
+        <h2 style="font-size:1.4rem;margin-block-end:8px">{t('ماذا يحدث بعد الإرسال', 'What happens next')}</h2>
+        <ul class="side-list">
+          <li><b>{t('1. مراجعة', '1. Review')}</b>{t('يراجع مهندس التقدير طلبك خلال يوم عمل.', 'An estimator reviews your request within one working day.')}</li>
+          <li><b>{t('2. اتصال', '2. Call')}</b>{t('نتصل بك لتوضيح النطاق والموقع.', 'We call to clarify scope and site.')}</li>
+          <li><b>{t('3. تقدير أولي', '3. Initial estimate')}</b>{t('تصلك نطاقات التكلفة والمدة خلال ثلاثة أيام عمل.', 'You receive cost and duration ranges within three working days.')}</li>
+        </ul>
+        <p class="fine">{t('تفضّل الاتصال؟', 'Prefer to call?')} <a href={`tel:${company.tel}`}><span class="ltr">{company.phone}</span></a></p>
+      </aside>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/quote.ts';
+  </script>
+</Base>

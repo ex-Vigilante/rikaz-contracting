@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+import { company } from '../../data/site';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+---
+<Base lang={lang} title={t('تواصل معنا', 'Contact')} description={t('تواصل مع رِكاز: المقر الرئيسي في الرياض وفرع جدة، الاتصال المباشر وواتساب والبريد الإلكتروني. الدوام من الأحد إلى الخميس.', 'Contact Rikaz: Riyadh headquarters and Jeddah branch, direct call, WhatsApp and email. Open Sunday to Thursday.')} path="contact/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('تواصل معنا', 'Contact')}</span></nav>
+      <h1>{t('نسعد بسماع تفاصيل مشروعك', 'We would like to hear about your project')}</h1>
+      <p class="lead">{t('اتصل بنا مباشرة أو راسلنا. وللحصول على تقدير أولي للتكلفة استخدم نموذج طلب عرض السعر.', 'Call or write to us directly. For an initial cost estimate, use the quote request form.')}</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap">
+      <div class="quick">
+        <a href={`tel:${company.tel}`}><b>{t('اتصال مباشر', 'Call us')}</b><span class="ltr">{company.phone}</span></a>
+        <a href={company.whatsapp} target="_blank" rel="noopener"><b>{t('واتساب', 'WhatsApp')}</b><span>{t('محادثة سريعة مع فريق المبيعات', 'Chat with the sales team')}</span></a>
+        <a href={`mailto:${company.email}`}><b>{t('البريد الإلكتروني', 'Email')}</b><span class="ltr">{company.email}</span></a>
+      </div>
+      <div class="contact-grid" style="margin-block-start:48px">
+        <article class="office reveal">
+          <p class="eyebrow">{t('المقر الرئيسي', 'Headquarters')}</p>
+          <h2>{t('الرياض', 'Riyadh')}</h2>
+          <p>{company.hqAddress[lang]}</p>
+          <dl><dt>{t('الدوام', 'Hours')}</dt><dd>{company.hours[lang]}</dd><dt>{t('الهاتف', 'Phone')}</dt><dd><a href={`tel:${company.tel}`} class="ltr">{company.phone}</a></dd></dl>
+        </article>
+        <article class="office reveal" style="--d:.1s">
+          <p class="eyebrow">{t('الفرع', 'Branch')}</p>
+          <h2>{t('جدة', 'Jeddah')}</h2>
+          <p>{company.jeddahAddress[lang]}</p>
+          <dl><dt>{t('الدوام', 'Hours')}</dt><dd>{company.hours[lang]}</dd><dt>{t('البريد', 'Email')}</dt><dd><a href={`mailto:${company.email}`}>{company.email}</a></dd></dl>
+        </article>
+      </div>
+      <p class="fine">{t('العناوين وأرقام التواصل افتراضية لأغراض العرض.', 'Addresses and contact numbers are fictional, for demonstration.')}</p>
+    </div>
+  </section>
+  <section class="cta-band">
+    <div class="wrap">
+      <div><h2>{t('جاهز لبدء مشروعك؟', 'Ready to start your project?')}</h2><p>{t('أرسل لنا نوع المشروع ومدينته وميزانيته التقريبية.', 'Send us the project type, city and approximate budget.')}</p></div>
+      <a class="btn" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
+    </div>
+  </section>
+</Base>

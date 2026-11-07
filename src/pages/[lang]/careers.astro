@@ -1,0 +1,87 @@
+---
+import Base from '../../layouts/Base.astro';
+import Field from '../../components/Field.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+import { jobs, depts } from '../../data/jobs';
+import { cities } from '../../data/projects';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+const jobCities = [...new Set(jobs.map((j) => j.city))];
+---
+<Base lang={lang} title={t('الوظائف', 'Careers')} description={t('وظائف في رِكاز: مهندسون ومديرو مواقع وأخصائيو سلامة وجودة ومشتريات في الرياض وجدة والدمام. قدّم طلبك الآن.', 'Careers at Rikaz: engineers, site managers, HSE, QA and procurement roles in Riyadh, Jeddah and Dammam. Apply now.')} path="careers/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('الوظائف', 'Careers')}</span></nav>
+      <h1>{t('وظائف لمهندسين ومديري مواقع ومختصي سلامة', 'Open roles for engineers, site managers and safety staff')}</h1>
+      <p class="lead">{t('نوظّف مهندسين وفنيين يستمتعون بالعمل في الموقع ويقدّرون الدقة. نوفر تدريباً مستمراً ومسار ترقٍّ واضحاً.', 'We hire engineers and tradespeople who enjoy working on site and value precision. We offer ongoing training and a clear path to promotion.')}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label={t('تصفية الوظائف', 'Filter jobs')} style="padding-block-start:0">
+        <div class="fgroup" data-jfilter="dept"><span>{t('القسم', 'Department')}</span>
+          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
+          {Object.entries(depts).map(([k, v]) => <button class="chip" type="button" data-value={k} aria-pressed="false">{v[lang]}</button>)}
+        </div>
+        <div class="fgroup" data-jfilter="city"><span>{t('المدينة', 'City')}</span>
+          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
+          {jobCities.map((c) => <button class="chip" type="button" data-value={c} aria-pressed="false">{cities[c].name[lang]}</button>)}
+        </div>
+      </div>
+      <p role="status" aria-live="polite" data-jcount style="color:var(--steel-ink);margin-block:16px 0" data-plural={JSON.stringify(lang === 'ar' ? { zero: 'لا توجد وظائف متاحة', one: 'وظيفة واحدة متاحة', two: 'وظيفتان متاحتان', few: '{n} وظائف متاحة', many: '{n} وظيفة متاحة', other: '{n} وظيفة متاحة' } : { one: '{n} open role', other: '{n} open roles' })}></p>
+      <ul data-jobs>
+        {jobs.map((j) => (
+          <li class="job" data-dept={j.dept} data-city={j.city}>
+            <div><h3>{j.title[lang]}</h3><p>{j.blurb[lang]}</p></div>
+            <div class="meta"><span>{depts[j.dept][lang]}</span><span>{cities[j.city].name[lang]}</span><span>{t('الخبرة', 'Experience')}: {j.exp[lang]}</span></div>
+            <button class="btn btn--line" type="button" data-apply={j.id}>{t('قدّم الآن', 'Apply')}</button>
+          </li>
+        ))}
+      </ul>
+      <p class="empty" data-jempty hidden>{t('لا توجد وظائف مطابقة حالياً.', 'No matching roles right now.')}</p>
+    </div>
+  </section>
+
+  <section class="section section--alt" id="apply" aria-labelledby="apply-h">
+    <div class="wrap" style="max-width:860px">
+      <div class="section-head"><p class="eyebrow">{t('نموذج التقديم', 'Application')}</p><h2 id="apply-h" class="h2">{t('قدّم طلبك', 'Send your application')}</h2></div>
+      <div class="form-card">
+        <form novalidate data-apply-form data-lang={lang}>
+          <div class="row2">
+            <Field id="a-name" name="name" label={t('الاسم الكامل', 'Full name')} autocomplete="name" required />
+            <Field as="select" id="a-job" name="job" label={t('الوظيفة', 'Position')} required>
+              <option value="">{t('اختر الوظيفة', 'Select a position')}</option>
+              {jobs.map((j) => <option value={j.id}>{j.title[lang]}</option>)}
+              <option value="general">{t('طلب عام', 'General application')}</option>
+            </Field>
+          </div>
+          <div class="row2">
+            <Field id="a-phone" name="phone" label={t('رقم الجوال', 'Mobile number')} type="tel" inputmode="tel" autocomplete="tel" rule="phone" required ltr placeholder="05XXXXXXXX" />
+            <Field id="a-email" name="email" label={t('البريد الإلكتروني', 'Email')} type="email" inputmode="email" autocomplete="email" rule="email" required ltr />
+          </div>
+          <Field id="a-exp" name="exp" label={t('سنوات الخبرة', 'Years of experience')} type="text" inputmode="decimal" rule="exp" required ltr />
+          <div class="field">
+            <label for="a-file">{t('السيرة الذاتية', 'CV')} <span class="opt">({t('اختياري', 'optional')})</span></label>
+            <input id="a-file" name="cv" type="file" accept=".pdf,.jpg,.jpeg,.png" data-rule="file" data-label={t('السيرة الذاتية', 'CV')} aria-describedby="a-file-hint a-file-info a-file-err" />
+            <span class="hint" id="a-file-hint">{t('PDF أو JPG أو PNG بحد أقصى 10 ميجابايت. لا يُرفع الملف في هذه النسخة التجريبية.', 'PDF, JPG or PNG up to 10 MB. The file is not uploaded in this demo.')}</span>
+            <span class="file-info" id="a-file-info" aria-live="polite"></span>
+            <span class="err" id="a-file-err" role="alert"></span>
+          </div>
+          <Field as="textarea" id="a-msg" name="msg" label={t('نبذة قصيرة', 'Short note')} optional={t('اختياري', 'optional')} />
+          <button class="btn btn--accent" type="submit">{t('إرسال الطلب', 'Submit application')}</button>
+        </form>
+        <div class="success" data-apply-success hidden tabindex="-1">
+          <span class="demo-tag">{t('نسخة تجريبية', 'Demo')}</span>
+          <h3 class="h2" style="margin-block-start:16px">{t('استلمنا طلبك', 'Application received')}</h3>
+          <p class="lead" style="margin-inline:auto">{t('هذا عرض تجريبي: لم يُرسَل شيء ولم تُحفظ أي بيانات.', 'This is a demo: nothing was sent and no data was stored.')}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    import '../../scripts/careers.ts';
+  </script>
+</Base>

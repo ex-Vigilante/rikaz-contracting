@@ -1,0 +1,27 @@
+---
+import { imgUrl, imgSrcset, type ImgKey } from '../data/images';
+interface Props {
+  k: ImgKey;
+  alt: string;
+  w?: number; // intrinsic width ratio
+  h?: number; // intrinsic height ratio
+  sizes?: string;
+  eager?: boolean;
+  class?: string;
+  parallax?: boolean;
+}
+const { k, alt, w = 3, h = 2, sizes = '100vw', eager = false, class: cls = '', parallax = false } = Astro.props;
+---
+<img
+  class={cls}
+  src={imgUrl(k, 1200)}
+  srcset={imgSrcset(k)}
+  sizes={sizes}
+  width={w * 400}
+  height={h * 400}
+  alt={alt}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  fetchpriority={eager ? 'high' : undefined}
+  data-parallax={parallax ? '' : undefined}
+/>

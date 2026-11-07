@@ -1,0 +1,30 @@
+---
+interface Props {
+  id: string;
+  label: string;
+  as?: 'input' | 'select' | 'textarea';
+  type?: string;
+  name?: string;
+  required?: boolean;
+  optional?: string;
+  autocomplete?: string;
+  inputmode?: string;
+  rule?: string;
+  hint?: string;
+  placeholder?: string;
+  ltr?: boolean;
+  accept?: string;
+  min?: number;
+}
+const { id, label, as = 'input', type = 'text', name = id, required = false, optional, autocomplete, inputmode, rule, hint, placeholder, ltr = false, accept, min } = Astro.props;
+const describedby = [hint ? `${id}-hint` : '', `${id}-err`].filter(Boolean).join(' ');
+const common = { id, name, required, autocomplete, 'aria-describedby': describedby, 'data-rule': rule, 'data-label': label, class: ltr ? 'ltr-in' : undefined };
+---
+<div class="field">
+  <label for={id}>{label}{optional && <span class="opt"> ({optional})</span>}</label>
+  {as === 'select' && <select {...common}><slot /></select>}
+  {as === 'textarea' && <textarea {...common} rows="4" placeholder={placeholder}></textarea>}
+  {as === 'input' && <input {...common} type={type} inputmode={inputmode} placeholder={placeholder} accept={accept} min={min} />}
+  {hint && <span class="hint" id={`${id}-hint`}>{hint}</span>}
+  <span class="err" id={`${id}-err`} role="alert"></span>
+</div>

@@ -1,0 +1,69 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectCard from '../../../components/ProjectCard.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../../lib/i18n';
+import { projects, categories, cities, statuses, type CityKey } from '../../../data/projects';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+const usedCities = (Object.keys(cities) as CityKey[]).filter((c) => projects.some((p) => p.city === c));
+const points = usedCities.map((c) => ({
+  key: c,
+  name: cities[c].name[lang],
+  lat: cities[c].lat,
+  lng: cities[c].lng,
+  items: projects.filter((p) => p.city === c).map((p) => ({ title: p.title[lang], url: href(lang, `projects/${p.slug}/`) })),
+}));
+---
+<Base lang={lang} title={t('مشاريعنا', 'Projects')} description={t('معرض مشاريع رِكاز: مشاريع تجارية وسكنية وضيافة وبنية تحتية في الرياض وجدة والدمام والعلا، مع تصفية حسب النوع والمدينة والحالة.', 'Rikaz project portfolio: commercial, residential, hospitality and infrastructure projects in Riyadh, Jeddah, Dammam and AlUla, filterable by type, city and status.')} path="projects/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('مشاريعنا', 'Projects')}</span></nav>
+      <h1>{t('مشاريع نفخر بتسليمها', 'Projects we are proud to have delivered')}</h1>
+      <p class="lead">{t('عشرة مشاريع مختارة من محفظة تتجاوز 186 مشروعاً. صفِّها حسب النوع أو المدينة أو الحالة.', 'Ten selected projects from a portfolio of more than 186. Filter by type, city or status.')}</p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-block-start:0">
+    <div class="wrap">
+      <div class="filters" role="group" aria-label={t('تصفية المشاريع', 'Filter projects')}>
+        <div class="fgroup" data-filter="cat"><span>{t('النوع', 'Type')}</span>
+          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
+          {Object.entries(categories).map(([k, v]) => <button class="chip" type="button" data-value={k} aria-pressed="false">{v[lang]}</button>)}
+        </div>
+        <div class="fgroup" data-filter="city"><span>{t('المدينة', 'City')}</span>
+          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
+          {usedCities.map((c) => <button class="chip" type="button" data-value={c} aria-pressed="false">{cities[c].name[lang]}</button>)}
+        </div>
+        <div class="fgroup" data-filter="status"><span>{t('الحالة', 'Status')}</span>
+          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
+          {Object.entries(statuses).map(([k, v]) => <button class="chip" type="button" data-value={k} aria-pressed="false">{v[lang]}</button>)}
+        </div>
+      </div>
+      <div class="result-line">
+        <p style="margin:0" role="status" aria-live="polite" data-result data-plural={JSON.stringify(lang === 'ar' ? { zero: 'لا توجد مشاريع', one: 'مشروع واحد', two: 'مشروعان', few: '{n} مشاريع', many: '{n} مشروعاً', other: '{n} مشروع' } : { one: '{n} project', other: '{n} projects' })}></p>
+        <button class="reset" type="button" data-reset hidden>{t('إعادة ضبط التصفية', 'Reset filters')}</button>
+      </div>
+      <div class="p-grid" data-grid>
+        {projects.map((p) => <ProjectCard project={p} lang={lang} filterable />)}
+      </div>
+      <p class="empty" data-empty hidden>{t('لا توجد مشاريع تطابق هذه التصفية. جرّب تغيير الاختيار.', 'No projects match this filter. Try changing your selection.')}</p>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="map-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('الانتشار', 'Footprint')}</p><h2 id="map-h" class="h2">{t('خريطة المشاريع', 'Project map')}</h2><p class="lead">{t('اضغط على أي علامة لعرض مشاريع المدينة.', 'Select a marker to see the projects in that city.')}</p></div>
+      <div class="map-box" data-map data-points={JSON.stringify(points)} data-attribution={t('© مساهمو OpenStreetMap', '© OpenStreetMap contributors')} data-projects-label={t('مشاريع', 'projects')} role="region" aria-label={t('خريطة مواقع المشاريع', 'Map of project locations')}>
+        <div class="loading" data-loading>{t('جارٍ تحميل الخريطة…', 'Loading map…')}</div>
+      </div>
+      <ul class="city-list" aria-label={t('المدن', 'Cities')}>
+        {points.map((p) => <li><b>{p.name}</b> · {p.items.length}</li>)}
+      </ul>
+    </div>
+  </section>
+  <script>
+    import '../../../scripts/projects.ts';
+  </script>
+</Base>

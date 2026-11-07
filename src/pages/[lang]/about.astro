@@ -1,0 +1,92 @@
+---
+import Base from '../../layouts/Base.astro';
+import Pic from '../../components/Pic.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+const timeline = [
+  ['2009', t('التأسيس في الرياض بفريق من اثني عشر مهندساً وفنياً، وأول عقد لمبنى تجاري صغير.', 'Founded in Riyadh by a team of twelve engineers and tradespeople, with a first contract for a small commercial building.')],
+  ['2012', t('الانتقال إلى المقاولات العامة للفلل والمجمعات السكنية الخاصة.', 'Expanded into general contracting for private villas and residential compounds.')],
+  ['2015', t('افتتاح فرع جدة وبدء أعمال التشطيبات والديكور للفنادق والمكاتب.', 'Opened the Jeddah branch and began fit-out work for hotels and offices.')],
+  ['2018', t('الحصول على شهادات الأيزو للجودة والبيئة والسلامة، وإطلاق فريق إدارة المشاريع.', 'Achieved ISO certification for quality, environment and safety, and launched the project management team.')],
+  ['2021', t('دخول قطاع البنية التحتية، وتنفيذ مشاريع في المنطقة الشرقية.', 'Entered infrastructure, delivering projects in the Eastern Province.')],
+  ['2024', t('تجاوز 400 موظف وبدء أول مشروع ضيافة في العلا.', 'Passed 400 staff and started the first hospitality project in AlUla.')],
+  [t('اليوم', 'Today'), t('أكثر من 186 مشروعاً مكتملاً وعدة مشاريع قيد التنفيذ في أربع مدن ومنطقة شمال غرب المملكة.', 'More than 186 completed projects and several under way across four cities and the north-west region.')],
+];
+const team = [
+  { n: t('م. فهد السبيعي', 'Eng. Fahad Al-Subaie'), r: t('الرئيس التنفيذي', 'Chief Executive Officer'), m: t('ف', 'F'), b: t('مهندس مدني، 25 عاماً في المقاولات.', 'Civil engineer, 25 years in contracting.') },
+  { n: t('م. نورة القحطاني', 'Eng. Noura Al-Qahtani'), r: t('مديرة العمليات', 'Director of Operations'), m: t('ن', 'N'), b: t('تقود فرق المواقع في ثلاث مدن.', 'Leads site teams across three cities.') },
+  { n: t('أ. عبدالله الشمري', 'Abdullah Al-Shammari'), r: t('المدير المالي', 'Chief Financial Officer'), m: t('ع', 'A'), b: t('محاسب قانوني، مسؤول عن التكاليف والعقود.', 'Chartered accountant overseeing cost and contracts.') },
+  { n: t('م. ريم الغامدي', 'Eng. Reem Al-Ghamdi'), r: t('مديرة السلامة والجودة', 'Head of Safety and Quality'), m: t('ر', 'R'), b: t('تدير أنظمة الأيزو وبرنامج السلامة.', 'Runs the ISO systems and safety programme.') },
+];
+const values = [
+  [t('الالتزام بالموعد', 'Keeping the date'), t('نبني الجدول على الواقع، ونخبرك مبكراً عند أي خطر على التسليم.', 'We build the programme on facts and tell you early about any risk to handover.')],
+  [t('الشفافية', 'Transparency'), t('تقارير أسبوعية بالتكلفة والتقدم والمخاطر، دون مفاجآت في المستخلصات.', 'Weekly reports on cost, progress and risk, with no surprises in payment certificates.')],
+  [t('الجودة قبل السرعة', 'Quality before speed'), t('لا ننتقل إلى المرحلة التالية قبل اعتماد فحص المرحلة الحالية.', 'We do not move to the next stage until the current stage inspection is signed off.')],
+];
+---
+<Base lang={lang} title={t('من نحن', 'About')} description={t('رِكاز شركة مقاولات سعودية تأسست عام 2009 في الرياض، بأكثر من 420 موظفاً ونظام جودة وسلامة معتمد.', 'Rikaz is a Saudi contractor founded in 2009 in Riyadh, with over 420 staff and certified quality and safety systems.')} path="about/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('من نحن', 'About')}</span></nav>
+      <h1>{t('شركة سعودية تبني بانضباط المهندس', 'A Saudi contractor that builds with an engineer’s discipline')}</h1>
+      <p class="lead">{t('بدأنا عام 2009 بفريق صغير في الرياض. اليوم نعمل في أربع مدن ونُنفّذ مشاريع في شمال غرب المملكة، ونقيس نجاحنا بشيء واحد: أن يعود إلينا العميل بمشروعه التالي.', 'We started in 2009 with a small team in Riyadh. Today we work in four cities and deliver projects in the north-west region, and we measure success by one thing: the client coming back with the next project.')}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="tl-h">
+    <div class="wrap two-col" style="align-items:start">
+      <div class="reveal"><p class="eyebrow">{t('مسيرتنا', 'Our journey')}</p><h2 id="tl-h" class="h2" style="margin-block-end:24px">{t('من 2009 حتى اليوم', 'From 2009 to today')}</h2><Pic k="siteCity" alt={t('موقع إنشاء في مدينة سعودية', 'A construction site in a Saudi city')} sizes="(min-width: 800px) 45vw, 100vw" /></div>
+      <ol class="timeline reveal">
+        {timeline.map(([y, d]) => <li class="tl"><b>{y}</b><p>{d}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="team-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('القيادة', 'Leadership')}</p><h2 id="team-h" class="h2">{t('الفريق الذي يوقّع على كل مشروع', 'The team that signs off every project')}</h2></div>
+      <ul class="team">
+        {team.map((p, i) => (
+          <li class="person reveal" style={`--d:${i * 0.08}s`}><div class="mono" aria-hidden="true">{p.m}</div><h3>{p.n}</h3><p><b>{p.r}</b></p><p>{p.b}</p></li>
+        ))}
+      </ul>
+      <p class="fine">{t('أسماء القيادة افتراضية لأغراض العرض.', 'Leadership names are fictional, for demonstration.')}</p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="val-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('قيمنا', 'Values')}</p><h2 id="val-h" class="h2">{t('ثلاثة التزامات نكتبها في العقد', 'Three commitments we put in the contract')}</h2></div>
+      <div class="values">
+        {values.map(([h, p], i) => <div class="value reveal" style={`--d:${i * 0.08}s`}><h3>{h}</h3><p>{p}</p></div>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark on-dark" aria-labelledby="hse-h">
+    <div class="wrap two-col">
+      <div class="reveal">
+        <p class="eyebrow">{t('السلامة والجودة', 'Safety and quality')}</p>
+        <h2 id="hse-h" class="h2">{t('لا نقبل أن يكون العمل أسرع على حساب أحد', 'No schedule is worth someone’s safety')}</h2>
+        <p class="lead" style="margin-block-start:16px">{t('يلتزم كل موقع بخطة سلامة مكتوبة، وجلسة توعية صباحية، وتفتيش أسبوعي مستقل. ويخضع كل نشاط إنشائي لفحص جودة موثّق قبل الانتقال إلى ما بعده.', 'Every site follows a written safety plan, a morning briefing and an independent weekly inspection. Each structural activity passes a documented quality check before the next begins.')}</p>
+        <div class="kpis">
+          <div><b>{t('2.1 مليون', '2.1M')}</b><span>{t('ساعة عمل بلا إصابات مُضيّعة', 'hours without lost-time injury')}</span></div>
+          <div><b>3</b><span>{t('شهادات أيزو (توضيحية)', 'ISO certificates (illustrative)')}</span></div>
+          <div><b>100%</b><span>{t('أنشطة هيكلية بفحص موثّق', 'structural activities with documented inspection')}</span></div>
+          <div><b>1:25</b><span>{t('نسبة مسؤول سلامة لكل عمال الموقع', 'safety officer to site workforce ratio')}</span></div>
+        </div>
+      </div>
+      <Pic k="hardHat" alt={t('عامل بخوذة سلامة في موقع إنشاء', 'A worker in a safety helmet on a construction site')} sizes="(min-width: 800px) 45vw, 100vw" />
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <div><h2>{t('انضم إلى فريقنا أو ابدأ مشروعك معنا', 'Join our team or start your project with us')}</h2></div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap"><a class="btn" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a><a class="btn btn--line" style="color:#fff;border-color:#fff" href={href(lang, 'careers/')}>{t('الوظائف', 'Careers')}</a></div>
+    </div>
+  </section>
+</Base>

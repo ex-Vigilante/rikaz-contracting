@@ -1,0 +1,146 @@
+---
+import Base from '../../layouts/Base.astro';
+import Pic from '../../components/Pic.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+import { services } from '../../data/services';
+import { projects } from '../../data/projects';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+const featured = projects.filter((p) => ['al-nakheel-business-tower', 'al-yasmin-villa-compound', 'corniche-boutique-hotel'].includes(p.slug));
+const arrow = '<svg class="arrow flip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+const steps = [
+  { ar: ['المعاينة والدراسة', 'زيارة الموقع، مراجعة المخططات وتقدير التكلفة والجدول قبل أي التزام.'], en: ['Survey', 'Site visit, drawing review and a cost and programme estimate before any commitment.'] },
+  { ar: ['التصميم والتخطيط', 'تنسيق التصاميم مع المكتب الاستشاري وإعداد خطة التنفيذ والسلامة والمشتريات.'], en: ['Design and planning', 'Coordinate with the design consultant and prepare the execution, safety and procurement plans.'] },
+  { ar: ['التنفيذ', 'فريق موقع بقيادة مدير مشروع واحد، وتقارير أسبوعية وفحص جودة على كل مرحلة.'], en: ['Execution', 'One accountable project manager, weekly reports and a quality check at every stage.'] },
+  { ar: ['التسليم والضمان', 'اختبار وتشغيل وتسليم موثّق، ثم فترة ضمان وفريق صيانة يستجيب لملاحظاتكم.'], en: ['Handover and warranty', 'Testing, commissioning and documented handover, followed by a defects period and a responsive maintenance team.'] },
+];
+const sectors = lang === 'ar'
+  ? ['تطوير عقاري', 'ضيافة وسياحة', 'تجزئة', 'صناعي ولوجستي', 'خدمات مالية', 'مشاريع حكومية وشبه حكومية', 'سكني خاص', 'رعاية صحية', 'تعليم']
+  : ['Real estate development', 'Hospitality and tourism', 'Retail', 'Industrial and logistics', 'Financial services', 'Public and semi-public', 'Private residential', 'Healthcare', 'Education'];
+const quotes = [
+  { q: { ar: 'سلّمت رِكاز البرج قبل الموعد المتفق عليه بأسبوعين، وكانت تقارير التقدم الأسبوعية واضحة بما يكفي لنتخذ قراراتنا دون اجتماعات إضافية.', en: 'Rikaz handed over the tower two weeks ahead of the agreed date, and the weekly reports were clear enough to make decisions without extra meetings.' }, n: { ar: 'م. خالد العتيبي', en: 'Eng. Khalid Al-Otaibi' }, r: { ar: 'مدير مشاريع، شركة تطوير عقاري (مثال)', en: 'Project Director, property developer (sample)' } },
+  { q: { ar: 'فحص الجودة لكل غرفة وفّر علينا جولات الملاحظات المعتادة. استلمنا الفلل جاهزة للسكن بملاحظات قليلة جداً.', en: 'The room-by-room quality check saved us the usual snag rounds. We received the villas move-in ready with very few defects.' }, n: { ar: 'أ. سارة الدوسري', en: 'Sarah Al-Dosari' }, r: { ar: 'مالكة، مجمع سكني خاص (مثال)', en: 'Owner, private compound (sample)' } },
+  { q: { ar: 'عملوا في الفندق أثناء التشغيل بجدول مرن ولم نُغلق أكثر من جناح واحد في كل مرة. هذا ما كنا نحتاجه.', en: 'They worked inside an operating hotel on a flexible schedule and we never closed more than one wing at a time. Exactly what we needed.' }, n: { ar: 'أ. ماجد الحربي', en: 'Majed Al-Harbi' }, r: { ar: 'المدير العام، فندق (مثال)', en: 'General Manager, hotel (sample)' } },
+];
+---
+<Base lang={lang} title={t('مقاولات عامة وتشطيبات في الرياض', 'General Contracting and Fit-out in Riyadh')} description={t('رِكاز للمقاولات: إنشاءات تجارية وفلل سكنية وتشطيبات وبنية تحتية في الرياض وجدة والدمام والعلا. اطلب عرض سعر.', 'Rikaz Contracting: commercial construction, villas, fit-out and infrastructure across Riyadh, Jeddah, Dammam and AlUla. Request a quote.')} path="">
+  <section class="hero on-dark">
+    <div class="hero-media"><Pic k="heroCranes" alt="" w={3} h={2} eager parallax sizes="100vw" /></div>
+    <div class="wrap hero-inner">
+      <p class="eyebrow">{t('مقاولات عامة وتشطيبات · الرياض منذ 2009', 'General contracting and fit-out · Riyadh since 2009')}</p>
+      <h1>{t('نبني على أساسٍ لا يتزحزح', "Built on ground that doesn't move")}</h1>
+      <p class="lead">{t('رِكاز شركة سعودية للمقاولات العامة والتشطيبات، نُسلّم المشاريع التجارية والسكنية والبنية التحتية في الوقت المتفق عليه وبجودة موثّقة.', 'Rikaz is a Saudi general contractor delivering commercial, residential and infrastructure projects on the agreed date and to documented quality.')}</p>
+      <div class="hero-actions">
+        <a class="btn btn--accent" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
+        <a class="btn btn--line" href={href(lang, 'projects/')}>{t('استعرض مشاريعنا', 'View our projects')}</a>
+      </div>
+      <div class="hero-meta">
+        <span>{t('تأسست عام 2009', 'Founded 2009')}</span>
+        <span>{t('420 موظفاً', '420 staff')}</span>
+        <span>{t('الرياض · جدة · الدمام · العلا', 'Riyadh · Jeddah · Dammam · AlUla')}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="stats-h">
+    <div class="wrap">
+      <h2 id="stats-h" class="vh">{t('أرقام الشركة', 'Company figures')}</h2>
+      <div class="stats">
+        <div class="stat reveal"><span class="num" data-count="17" data-suffix="+">0</span><p>{t('سنة من العمل منذ التأسيس', 'years of work since founding')}</p></div>
+        <div class="stat reveal" style="--d:.1s"><span class="num" data-count="186">0</span><p>{t('مشروعاً مكتملاً', 'completed projects')}</p></div>
+        <div class="stat reveal" style="--d:.2s"><span class="num" data-count="420">0</span><p>{t('موظفاً ومهندساً وفنياً', 'engineers, managers and tradespeople')}</p></div>
+        <div class="stat reveal" style="--d:.3s"><span class="num" data-count="2.1" data-decimals="1" data-suffix={t('', 'M')}>0</span><p>{t('مليون ساعة عمل بلا إصابات مُضيّعة للوقت', 'hours worked without a lost-time injury')}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="svc-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div class="section-head reveal"><p class="eyebrow">{t('ما نقدمه', 'What we do')}</p><h2 id="svc-h" class="h2">{t('ست خدمات، مسؤول واحد عن التسليم', 'Six services, one party accountable for delivery')}</h2></div>
+        <a class="link-arrow" href={href(lang, 'services/')}>{t('كل الخدمات', 'All services')} <Fragment set:html={arrow} /></a>
+      </div>
+      <div class="svc-grid">
+        {services.map((s, i) => (
+          <a class="svc reveal" style={`--d:${(i % 3) * 0.08}s`} href={href(lang, `services/#${s.id}`)}>
+            <span class="svc-n">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title[lang]}</h3>
+            <p>{s.blurb[lang]}</p>
+            <span class="go">{t('التفاصيل', 'Details')} <Fragment set:html={arrow} /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="feat-h">
+    <div class="wrap">
+      <div class="split-head">
+        <div class="section-head reveal"><p class="eyebrow">{t('أعمال مختارة', 'Selected work')}</p><h2 id="feat-h" class="h2">{t('مشاريع تحكي عنا أكثر مما نقول', 'Projects that say more than we do')}</h2></div>
+        <a class="link-arrow" href={href(lang, 'projects/')}>{t('كل المشاريع', 'All projects')} <Fragment set:html={arrow} /></a>
+      </div>
+      <div class="p-grid p-grid--feat">
+        {featured.map((p, i) => <ProjectCard project={p} lang={lang} delay={i * 0.1} sizes={i === 0 ? '(min-width: 960px) 66vw, 100vw' : '(min-width: 960px) 33vw, 100vw'} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark on-dark" aria-labelledby="proc-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('طريقة العمل', 'How we work')}</p><h2 id="proc-h" class="h2">{t('من الزيارة الأولى إلى المفتاح', 'From first site visit to the keys')}</h2></div>
+      <ol class="process">
+        {steps.map((s, i) => (
+          <li class="step reveal" style={`--d:${i * 0.1}s`}>
+            <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s[lang][0]}</h3>
+            <p>{s[lang][1]}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="sec-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('عملاؤنا', 'Who we build for')}</p><h2 id="sec-h" class="h2">{t('قطاعات نخدمها', 'Sectors we serve')}</h2></div>
+      <ul class="badges reveal">{sectors.map((s) => <li class="badge">{s}</li>)}</ul>
+      <div style="margin-block-start:72px">
+        <h3 class="reveal" style="font-size:1.4rem;margin-block-end:20px">{t('أنظمة الجودة والسلامة', 'Quality and safety systems')}</h3>
+        <div class="certs reveal">
+          <div class="cert"><b>ISO 9001</b><span>{t('إدارة الجودة', 'Quality management')}</span></div>
+          <div class="cert"><b>ISO 14001</b><span>{t('الإدارة البيئية', 'Environmental management')}</span></div>
+          <div class="cert"><b>ISO 45001</b><span>{t('السلامة والصحة المهنية', 'Occupational health and safety')}</span></div>
+        </div>
+        <p class="fine">{t('شعارات الشهادات توضيحية لأغراض العرض فقط.', 'Certificate badges are illustrative, for demonstration only.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt" aria-labelledby="q-h">
+    <div class="wrap">
+      <div class="section-head reveal"><p class="eyebrow">{t('آراء تجريبية', 'Sample testimonials')}</p><h2 id="q-h" class="h2">{t('ما يقوله عملاء المشاريع', 'What project clients say')}</h2></div>
+      <div class="quotes">
+        {quotes.map((q, i) => (
+          <figure class="quote reveal" style={`--d:${i * 0.1}s`}>
+            <blockquote style="margin:0"><p>{q.q[lang]}</p></blockquote>
+            <footer><b>{q.n[lang]}</b>{q.r[lang]}</footer>
+          </figure>
+        ))}
+      </div>
+      <p class="fine">{t('هذه آراء تجريبية لأغراض العرض وليست لعملاء حقيقيين.', 'These are sample testimonials for demonstration and not from real clients.')}</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <div>
+        <h2>{t('هل لديك مشروع؟ ابدأ بعرض سعر مبدئي.', 'Have a project? Start with a preliminary quote.')}</h2>
+        <p>{t('أجب عن أسئلة قصيرة في ثلاث خطوات وسنرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Answer a few short questions and we will reply within three working days with an initial cost and duration estimate.')}</p>
+      </div>
+      <a class="btn" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
+    </div>
+  </section>
+</Base>

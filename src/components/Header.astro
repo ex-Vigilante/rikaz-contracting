@@ -1,0 +1,28 @@
+---
+import { href, other, nav, tr, type Lang } from '../lib/i18n';
+import { company } from '../data/site';
+interface Props { lang: Lang; path: string; noCurrent?: boolean }
+const { lang, path, noCurrent = false } = Astro.props;
+const t = tr(lang);
+const alt = other(lang);
+const isCurrent = (key: string) => !noCurrent && (key === '' ? path === '' : path.startsWith(key.replace('/', '')));
+---
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href={href(lang)} aria-label={company.name[lang]}>
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#1C1D1F" /><path d="M7 25V7h10a6 6 0 0 1 2 11.6L25 25h-5l-5-5.5H12V25z M12 11v5h5a2.5 2.5 0 0 0 0-5z" fill="#EFEDE8" /><rect x="22" y="6" width="4" height="4" fill="#B8471E" /></svg>
+      <span><b>{company.short[lang]}</b><small>{t('للمقاولات', 'CONTRACTING')}</small></span>
+    </a>
+    <nav id="site-nav" class="nav" aria-label={t('التنقل الرئيسي', 'Main navigation')}>
+      {nav.map((n) => (
+        <a href={href(lang, n.key)} aria-current={isCurrent(n.key) ? 'page' : undefined}>{n[lang]}</a>
+      ))}
+      <span class="nav-cta-mobile"><a href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a></span>
+    </nav>
+    <a class="btn btn--accent header-cta" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
+    <a class="lang-switch" href={href(alt, path)} hreflang={alt} lang={alt} aria-label={alt === 'en' ? 'English' : 'العربية'}>{alt === 'en' ? 'EN' : 'عربي'}</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label={t('القائمة', 'Menu')}>
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>

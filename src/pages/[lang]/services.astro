@@ -1,0 +1,40 @@
+---
+import Base from '../../layouts/Base.astro';
+import Pic from '../../components/Pic.astro';
+import { href, staticLangPaths, tr, type Lang } from '../../lib/i18n';
+import { services } from '../../data/services';
+
+export function getStaticPaths() { return staticLangPaths(); }
+const { lang } = Astro.params as { lang: Lang };
+const t = tr(lang);
+---
+<Base lang={lang} title={t('خدماتنا', 'Services')} description={t('خدمات رِكاز: إنشاءات تجارية، فلل سكنية، تشطيبات وديكور، بنية تحتية، إدارة مشاريع وصيانة، مع نطاق العمل والمدة المعتادة لكل خدمة.', 'Rikaz services: commercial construction, villas, fit-out, infrastructure, project management and maintenance, with scope and typical timelines.')} path="services/">
+  <section class="page-hero grid-lines">
+    <div class="wrap">
+      <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('خدماتنا', 'Services')}</span></nav>
+      <h1>{t('خدمات متكاملة من الأساسات إلى الصيانة', 'Integrated services, from foundations to maintenance')}</h1>
+      <p class="lead">{t('يمكنك التعاقد معنا على مرحلة واحدة أو على المشروع كاملاً. في الحالتين لديك جهة واحدة مسؤولة عن الجدول والتكلفة والجودة.', 'Hire us for a single phase or the whole project. Either way, one party is accountable for programme, cost and quality.')}</p>
+    </div>
+  </section>
+  <div class="wrap">
+    {services.map((s, i) => (
+      <section class="svc-row" id={s.id} aria-labelledby={`${s.id}-h`}>
+        <div class="svc-media reveal"><Pic k={s.img} alt="" w={4} h={3} sizes="(min-width: 800px) 40vw, 100vw" /></div>
+        <div class="reveal">
+          <p class="eyebrow">{String(i + 1).padStart(2, '0')}</p>
+          <h2 id={`${s.id}-h`}>{s.title[lang]}</h2>
+          <p class="lead">{s.blurb[lang]}</p>
+          <h3 style="font-size:1.1rem;margin-block:20px 8px">{t('ما يشمله النطاق', 'What is included')}</h3>
+          <ul class="ticks">{s.includes[lang].map((x) => <li>{x}</li>)}</ul>
+          <p class="time"><span>{t('المدة المعتادة', 'Typical timeline')}</span><b>{s.timeline[lang]}</b></p>
+        </div>
+      </section>
+    ))}
+  </div>
+  <section class="cta-band">
+    <div class="wrap">
+      <div><h2>{t('أخبرنا عن مشروعك', 'Tell us about your project')}</h2><p>{t('نحدد معك النطاق والجدول المناسبين قبل أن نقدّم السعر.', 'We agree the right scope and programme with you before we price.')}</p></div>
+      <a class="btn" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
+    </div>
+  </section>
+</Base>

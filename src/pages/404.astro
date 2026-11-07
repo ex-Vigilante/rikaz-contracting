@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import { href } from '../lib/i18n';
+---
+<Base lang="ar" title="الصفحة غير موجودة" description="الصفحة التي طلبتها غير موجودة. Page not found." noindex>
+  <section class="nf">
+    <div class="wrap">
+      <big aria-hidden="true">404</big>
+      <h1 class="h2" style="margin-block:16px 8px">الصفحة غير موجودة</h1>
+      <p class="lead" style="margin-inline:auto">ربما نُقلت الصفحة أو أن الرابط غير صحيح.</p>
+      <h2 style="font-size:1.4rem;margin-block-start:28px" lang="en" dir="ltr">Page not found</h2>
+      <p lang="en" dir="ltr">The page may have moved, or the link is incorrect.</p>
+      <p style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-block-start:24px">
+        <a class="btn" href={href('ar')}>الصفحة الرئيسية</a>
+        <a class="btn btn--line" href={href('en')} lang="en">Home (English)</a>
+      </p>
+    </div>
+  </section>
+</Base>
