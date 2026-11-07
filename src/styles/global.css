@@ -240,9 +240,10 @@ button { cursor: pointer; }
 .filters { display: grid; gap: 18px; padding-block: 28px; border-block-end: 1px solid var(--rule); }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .fgroup > span { font-weight: 600; min-width: 90px; font-size: 0.95rem; }
-.chip { border: 1px solid var(--rule-strong); background: transparent; padding: 8px 18px; min-height: 44px; font-weight: 500; transition: 0.15s; }
+.chip { flex: none; border: 1px solid var(--rule-strong); background: transparent; padding: 8px 18px; min-height: 44px; font-weight: 500; transition: 0.15s; }
 .chip:hover { border-color: var(--ink); }
 .chip[aria-pressed='true'] { background: var(--ink); color: #fff; border-color: var(--ink); }
+@media (max-width: 640px) { .fgroup { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding-block-end: 2px; } .fgroup::-webkit-scrollbar { display: none; } .fgroup > span { min-width: 0; flex: none; } }
 .result-line { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-block: 20px; color: var(--steel-ink); }
 .reset { background: none; border: 0; text-decoration: underline; padding: 8px; min-height: 44px; }
 .empty { padding: 48px 0; text-align: center; color: var(--steel-ink); }

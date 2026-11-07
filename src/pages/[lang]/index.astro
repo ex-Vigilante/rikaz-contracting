@@ -20,11 +20,6 @@ const steps = [
 const sectors = lang === 'ar'
   ? ['تطوير عقاري', 'ضيافة وسياحة', 'تجزئة', 'صناعي ولوجستي', 'خدمات مالية', 'مشاريع حكومية وشبه حكومية', 'سكني خاص', 'رعاية صحية', 'تعليم']
   : ['Real estate development', 'Hospitality and tourism', 'Retail', 'Industrial and logistics', 'Financial services', 'Public and semi-public', 'Private residential', 'Healthcare', 'Education'];
-const quotes = [
-  { q: { ar: 'سلّمت رِكاز البرج قبل الموعد المتفق عليه بأسبوعين، وكانت تقارير التقدم الأسبوعية واضحة بما يكفي لنتخذ قراراتنا دون اجتماعات إضافية.', en: 'Rikaz handed over the tower two weeks ahead of the agreed date, and the weekly reports were clear enough to make decisions without extra meetings.' }, n: { ar: 'م. خالد العتيبي', en: 'Eng. Khalid Al-Otaibi' }, r: { ar: 'مدير مشاريع، شركة تطوير عقاري (مثال)', en: 'Project Director, property developer (sample)' } },
-  { q: { ar: 'فحص الجودة لكل غرفة وفّر علينا جولات الملاحظات المعتادة. استلمنا الفلل جاهزة للسكن بملاحظات قليلة جداً.', en: 'The room-by-room quality check saved us the usual snag rounds. We received the villas move-in ready with very few defects.' }, n: { ar: 'أ. سارة الدوسري', en: 'Sarah Al-Dosari' }, r: { ar: 'مالكة، مجمع سكني خاص (مثال)', en: 'Owner, private compound (sample)' } },
-  { q: { ar: 'عملوا في الفندق أثناء التشغيل بجدول مرن ولم نُغلق أكثر من جناح واحد في كل مرة. هذا ما كنا نحتاجه.', en: 'They worked inside an operating hotel on a flexible schedule and we never closed more than one wing at a time. Exactly what we needed.' }, n: { ar: 'أ. ماجد الحربي', en: 'Majed Al-Harbi' }, r: { ar: 'المدير العام، فندق (مثال)', en: 'General Manager, hotel (sample)' } },
-];
 ---
 <Base lang={lang} title={t('مقاولات عامة وتشطيبات في الرياض', 'General Contracting and Fit-out in Riyadh')} description={t('رِكاز للمقاولات: إنشاءات تجارية وفلل سكنية وتشطيبات وبنية تحتية في الرياض وجدة والدمام والعلا. اطلب عرض سعر.', 'Rikaz Contracting: commercial construction, villas, fit-out and infrastructure across Riyadh, Jeddah, Dammam and AlUla. Request a quote.')} path="">
   <section class="hero on-dark">
@@ -32,7 +27,7 @@ const quotes = [
     <div class="wrap hero-inner">
       <p class="eyebrow">{t('مقاولات عامة وتشطيبات · الرياض منذ 2009', 'General contracting and fit-out · Riyadh since 2009')}</p>
       <h1>{t('نبني على أساسٍ لا يتزحزح', "Built on ground that doesn't move")}</h1>
-      <p class="lead">{t('رِكاز شركة سعودية للمقاولات العامة والتشطيبات، نُسلّم المشاريع التجارية والسكنية والبنية التحتية في الوقت المتفق عليه وبجودة موثّقة.', 'Rikaz is a Saudi general contractor delivering commercial, residential and infrastructure projects on the agreed date and to documented quality.')}</p>
+      <p class="lead">{t('مقاولات عامة وتشطيبات للمشاريع التجارية والسكنية والبنية التحتية. اطّلع على أعمالنا، أو اطلب عرض سعر في دقيقتين.', 'General contracting and fit-out for commercial, residential and infrastructure projects. Browse our work, or request a quote in two minutes.')}</p>
       <div class="hero-actions">
         <a class="btn btn--accent" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
         <a class="btn btn--line" href={href(lang, 'projects/')}>{t('استعرض مشاريعنا', 'View our projects')}</a>
@@ -119,26 +114,11 @@ const quotes = [
     </div>
   </section>
 
-  <section class="section section--alt" aria-labelledby="q-h">
-    <div class="wrap">
-      <div class="section-head reveal"><p class="eyebrow">{t('آراء تجريبية', 'Sample testimonials')}</p><h2 id="q-h" class="h2">{t('ما يقوله عملاء المشاريع', 'What project clients say')}</h2></div>
-      <div class="quotes">
-        {quotes.map((q, i) => (
-          <figure class="quote reveal" style={`--d:${i * 0.1}s`}>
-            <blockquote style="margin:0"><p>{q.q[lang]}</p></blockquote>
-            <footer><b>{q.n[lang]}</b>{q.r[lang]}</footer>
-          </figure>
-        ))}
-      </div>
-      <p class="fine">{t('هذه آراء تجريبية لأغراض العرض وليست لعملاء حقيقيين.', 'These are sample testimonials for demonstration and not from real clients.')}</p>
-    </div>
-  </section>
-
   <section class="cta-band">
     <div class="wrap">
       <div>
         <h2>{t('هل لديك مشروع؟ ابدأ بعرض سعر مبدئي.', 'Have a project? Start with a preliminary quote.')}</h2>
-        <p>{t('أجب عن أسئلة قصيرة في ثلاث خطوات وسنرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Answer a few short questions and we will reply within three working days with an initial cost and duration estimate.')}</p>
+        <p>{t('أجب عن بضعة أسئلة قصيرة وسنرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Answer a few short questions and we will reply within three working days with an initial cost and duration estimate.')}</p>
       </div>
       <a class="btn" href={href(lang, 'quote/')}>{t('اطلب عرض سعر', 'Request a quote')}</a>
     </div>

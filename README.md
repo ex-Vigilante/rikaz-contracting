@@ -1,8 +1,8 @@
 # Rikaz Contracting | رِكاز للمقاولات
 
-A bilingual (Arabic / English) company website for a fictional Saudi contracting firm in Riyadh, built to the standard a premium agency would hand over to a real client.
+A bilingual (Arabic / English) company website for a fictional Saudi contracting firm in Riyadh. Visitors can browse past projects, compare before and after photos, find sites on a map and request a quote.
 
-موقع تعريفي ثنائي اللغة لشركة مقاولات سعودية (افتراضية)، بمستوى ما تسلّمه وكالة محترفة لعميل حقيقي.
+موقع تعريفي ثنائي اللغة لشركة مقاولات سعودية (افتراضية) في الرياض: مشاريع سابقة، صور قبل وبعد، خريطة، وطلب عرض سعر.
 
 **Live demo:** https://ex-vigilante.github.io/rikaz-contracting/
 
@@ -10,7 +10,7 @@ A bilingual (Arabic / English) company website for a fictional Saudi contracting
 
 | Projects (English) | Phone (Arabic) | Quote form (phone) |
 |---|---|---|
-| ![Filterable project gallery](screenshots/projects-en.jpg) | ![Home page on a phone](screenshots/mobile-ar.jpg) | ![Multi-step quote request](screenshots/quote-mobile-ar.jpg) |
+| ![Filterable project gallery](screenshots/projects-en.jpg) | ![Home page on a phone](screenshots/mobile-ar.jpg) | ![Quote request](screenshots/quote-mobile-ar.jpg) |
 
 ## The brief (case study)
 
@@ -22,9 +22,9 @@ A bilingual (Arabic / English) company website for a fictional Saudi contracting
 
 **Solution:**
 - Arabic-first site with a full English version. The language switch keeps you on the same page.
-- A project portfolio you can filter by type, city and status. Each project has its own page with a gallery, key facts and a **before/after slider**.
+- A project portfolio you can filter by type and city. Each project has its own page with a gallery, key facts and a **before/after slider**.
 - An interactive **project map** (OpenStreetMap, no API key).
-- A **4-step quote request** that qualifies leads up front: project type, city, size, budget, timeline and drawings. Drafts are saved if the visitor leaves.
+- A short **quote request** that qualifies leads up front: project type, city, size, budget and timeline, then contact details and a review. Drafts are saved if the visitor leaves.
 - Trust signals: animated stats, safety record, certifications, a delivery timeline, leadership and a careers page.
 
 ## Features
@@ -32,7 +32,7 @@ A bilingual (Arabic / English) company website for a fictional Saudi contracting
 - **Bilingual and RTL-correct:** separate `/ar/` and `/en/` routes, correct `lang`/`dir`, logical CSS, proper Arabic plurals (مشروع واحد، مشروعان، ٣ مشاريع) via `Intl.PluralRules`, `hreflang` and a sitemap.
 - **Projects:** instant filters, accessible lightbox (keyboard, Esc, focus trap, RTL-aware arrows), before/after comparison slider.
 - **Map:** Leaflet loads only when scrolled into view.
-- **Quote form:** step-by-step validation, Saudi mobile numbers in any common format (05…, +966…, 00966…, Arabic digits), file attachment checks (type and 10 MB), draft restore, reference number on submit.
+- **Quote form:** step-by-step validation, Saudi mobile numbers in any common format (05…, +966…, 00966…, Arabic digits), draft restore, reference number on submit.
 - **Careers:** job filters and a validated application form.
 - **Performance:** static HTML from Astro, almost no JavaScript, responsive images with fixed sizes.
 - **Accessibility:** skip link, keyboard-friendly menus, visible focus, WCAG AA contrast, reduced-motion support.
@@ -69,4 +69,4 @@ Every push to `main` runs `.github/workflows/deploy.yml`, which builds the site 
 
 ## Notes
 
-Rikaz Contracting, its people, projects and figures are fictional. Testimonials are labelled as samples, certifications are illustrative, and forms are demos that send nothing. Photos are from [Unsplash](https://unsplash.com).
+Rikaz Contracting, its people, projects and figures are fictional. Certifications are illustrative, and forms are demos that send nothing. Photos are from [Unsplash](https://unsplash.com).

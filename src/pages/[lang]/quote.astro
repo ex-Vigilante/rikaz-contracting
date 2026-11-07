@@ -30,14 +30,14 @@ const timelines = [
   ['6m', t('خلال 6 أشهر', 'Within 6 months')],
   ['later', t('بعد 6 أشهر', 'After 6 months')],
 ];
-const stepNames = [t('نوع المشروع', 'Project'), t('الحجم والميزانية', 'Scope'), t('بيانات التواصل', 'Contact'), t('المراجعة والإرسال', 'Review')];
+const stepNames = [t('المشروع', 'Project'), t('بيانات التواصل', 'Contact'), t('المراجعة والإرسال', 'Review')];
 ---
-<Base lang={lang} title={t('اطلب عرض سعر', 'Request a quote')} description={t('اطلب عرض سعر مبدئي من رِكاز في ثلاث خطوات قصيرة ثم مراجعة: نوع المشروع، الحجم والميزانية، بيانات التواصل.', 'Request a preliminary quote from Rikaz in three short steps and a review: project type, scope and budget, contact details.')} path="quote/">
+<Base lang={lang} title={t('اطلب عرض سعر', 'Request a quote')} description={t('اطلب عرض سعر مبدئي من رِكاز: أخبرنا عن المشروع وكيف نتواصل معك، ثم راجع طلبك وأرسله.', 'Request a preliminary quote from Rikaz: tell us about the project and how to reach you, then review and send.')} path="quote/">
   <section class="page-hero grid-lines">
     <div class="wrap">
       <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('اطلب عرض سعر', 'Request a quote')}</span></nav>
       <h1>{t('اطلب عرض سعر مبدئي', 'Request a preliminary quote')}</h1>
-      <p class="lead">{t('ثلاث خطوات قصيرة ثم مراجعة. نرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Three short steps, then review. We reply within three working days with an initial cost and duration estimate.')}</p>
+      <p class="lead">{t('خطوتان قصيرتان ثم مراجعة. نرد خلال ثلاثة أيام عمل بتقدير أولي للتكلفة والمدة.', 'Two short steps, then review. We reply within three working days with an initial cost and duration estimate.')}</p>
     </div>
   </section>
 
@@ -51,9 +51,9 @@ const stepNames = [t('نوع المشروع', 'Project'), t('الحجم والم
         <ol class="progress" aria-label={t('خطوات الطلب', 'Quote steps')} data-progress>
           {stepNames.map((n, i) => <li><b>{String(i + 1).padStart(2, '0')}</b><span>{n}</span></li>)}
         </ol>
-        <form novalidate data-quote data-demo-ref="RKZ-2026-" autocomplete="on" data-lang={lang} data-max-mb="10">
+        <form novalidate data-quote data-demo-ref="RKZ-2026-" autocomplete="on" data-lang={lang} >
           <fieldset data-step>
-            <h2 class="step-title" tabindex="-1">{t('ما نوع المشروع وأين موقعه؟', 'What kind of project, and where?')}</h2>
+            <h2 class="step-title" tabindex="-1">{t('أخبرنا عن مشروعك', 'Tell us about your project')}</h2>
             <div class="field">
               <fieldset data-radio-group="type" data-label={t('نوع المشروع', 'Project type')} aria-describedby="type-err">
                 <legend>{t('نوع المشروع', 'Project type')}</legend>
@@ -67,10 +67,6 @@ const stepNames = [t('نوع المشروع', 'Project'), t('الحجم والم
               <option value="">{t('اختر المدينة', 'Select a city')}</option>
               {cityOpts.map(([v, l]) => <option value={v}>{l}</option>)}
             </Field>
-          </fieldset>
-
-          <fieldset data-step hidden>
-            <h2 class="step-title" tabindex="-1">{t('الحجم والميزانية والمدة', 'Size, budget and timeline')}</h2>
             <div class="row2">
               <Field id="area" label={t('المساحة التقريبية (م²)', 'Approximate area (m²)')} type="text" inputmode="decimal" rule="area" required ltr hint={t('تقدير أولي يكفي.', 'A rough estimate is fine.')} />
               <Field as="select" id="budget" label={t('الميزانية التقديرية', 'Estimated budget')} required>
@@ -83,19 +79,11 @@ const stepNames = [t('نوع المشروع', 'Project'), t('الحجم والم
               {timelines.map(([v, l]) => <option value={v}>{l}</option>)}
             </Field>
             <Field as="textarea" id="details" label={t('وصف مختصر', 'Short description')} optional={t('اختياري', 'optional')} />
-            <div class="field">
-              <label for="file">{t('مرفق', 'Attachment')} <span class="opt">({t('اختياري', 'optional')})</span></label>
-              <input id="file" name="file" type="file" accept=".pdf,.jpg,.jpeg,.png,.dwg" aria-describedby="file-hint file-info file-err" data-label={t('المرفق', 'Attachment')} data-rule="file" />
-              <span class="hint" id="file-hint">{t('PDF أو JPG أو PNG أو DWG، بحد أقصى 10 ميجابايت. يبقى الملف على جهازك ولا يُرفع.', 'PDF, JPG, PNG or DWG, up to 10 MB. The file stays on your device and is not uploaded.')}</span>
-              <span class="file-info" id="file-info" aria-live="polite"></span>
-              <span class="err" id="file-err" role="alert"></span>
-            </div>
           </fieldset>
 
           <fieldset data-step hidden>
             <h2 class="step-title" tabindex="-1">{t('كيف نتواصل معك؟', 'How can we reach you?')}</h2>
             <Field id="name" label={t('الاسم الكامل', 'Full name')} autocomplete="name" required />
-            <Field id="company" label={t('الشركة', 'Company')} optional={t('اختياري', 'optional')} autocomplete="organization" />
             <div class="row2">
               <Field id="phone" label={t('رقم الجوال', 'Mobile number')} type="tel" inputmode="tel" autocomplete="tel" rule="phone" required ltr placeholder="05XXXXXXXX" hint={t('مثال: 0501234567 أو \u200E+966501234567', 'Example: 0501234567 or +966501234567')} />
               <Field id="email" label={t('البريد الإلكتروني', 'Email')} type="email" inputmode="email" autocomplete="email" rule="email" required ltr placeholder="name@company.com" />

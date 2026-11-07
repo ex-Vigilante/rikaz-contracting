@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { t, validateScope, liveClear, bindFiles, formatBytes } from './forms';
+import { t, validateScope, liveClear } from './forms';
 
 const form = document.querySelector('[data-quote]');
 const steps = [...form.querySelectorAll('[data-step]')];
@@ -10,13 +10,12 @@ const submit = form.querySelector('[data-submit]');
 const notice = document.querySelector('[data-notice]');
 const success = document.querySelector('[data-success]');
 const review = form.querySelector('[data-review]');
-const KEY = 'rikaz-quote-draft-v1';
+const KEY = 'rikaz-quote-draft-v2';
 let cur = 0;
 
 liveClear(form);
-bindFiles(form);
 
-/* Draft in localStorage (never includes the file) */
+/* Draft in localStorage */
 const store = {
   get() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch { return null; } },
   set(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch {} },
@@ -48,14 +47,12 @@ function buildReview() {
   };
   const checked = form.querySelector('input[name=type]:checked');
   add(t('نوع المشروع', 'Project type'), checked && checked.dataset.text);
-  ['city', 'area', 'budget', 'timeline', 'details', 'name', 'company', 'phone', 'email'].forEach((id) => {
+  ['city', 'area', 'budget', 'timeline', 'details', 'name', 'phone', 'email'].forEach((id) => {
     const c = form.querySelector('#' + id);
     let v = labelOf(c);
     if (id === 'area' && v) v += ' ' + t('م²', 'm²');
     add(c.dataset.label, v);
   });
-  const f = form.querySelector('#file').files[0];
-  add(t('المرفق', 'Attachment'), f && `${f.name} · ${formatBytes(f.size)}`);
 }
 
 function go(n, focus = true) {
@@ -107,7 +104,6 @@ document.querySelector('[data-clear-draft]').addEventListener('click', () => {
   form.reset();
   form.querySelectorAll('[aria-invalid]').forEach((c) => c.removeAttribute('aria-invalid'));
   form.querySelectorAll('.err').forEach((e) => { e.textContent = ''; });
-  const fi = document.getElementById('file-info'); if (fi) fi.textContent = '';
   notice.hidden = true;
   go(0, false);
 });

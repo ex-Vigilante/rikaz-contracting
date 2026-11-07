@@ -16,12 +16,12 @@ const points = usedCities.map((c) => ({
   items: projects.filter((p) => p.city === c).map((p) => ({ title: p.title[lang], url: href(lang, `projects/${p.slug}/`) })),
 }));
 ---
-<Base lang={lang} title={t('مشاريعنا', 'Projects')} description={t('معرض مشاريع رِكاز: مشاريع تجارية وسكنية وضيافة وبنية تحتية في الرياض وجدة والدمام والعلا، مع تصفية حسب النوع والمدينة والحالة.', 'Rikaz project portfolio: commercial, residential, hospitality and infrastructure projects in Riyadh, Jeddah, Dammam and AlUla, filterable by type, city and status.')} path="projects/">
+<Base lang={lang} title={t('مشاريعنا', 'Projects')} description={t('معرض مشاريع رِكاز: مشاريع تجارية وسكنية وضيافة وبنية تحتية في الرياض وجدة والدمام والعلا، مع تصفية حسب النوع والمدينة.', 'Rikaz project portfolio: commercial, residential, hospitality and infrastructure projects in Riyadh, Jeddah, Dammam and AlUla, filterable by type and city.')} path="projects/">
   <section class="page-hero grid-lines">
     <div class="wrap">
       <nav class="crumbs" aria-label={t('مسار الصفحة', 'Breadcrumb')}><a href={href(lang)}>{t('الرئيسية', 'Home')}</a><span aria-hidden="true">/</span><span>{t('مشاريعنا', 'Projects')}</span></nav>
       <h1>{t('مشاريع نفخر بتسليمها', 'Projects we are proud to have delivered')}</h1>
-      <p class="lead">{t('عشرة مشاريع مختارة من محفظة تتجاوز 186 مشروعاً. صفِّها حسب النوع أو المدينة أو الحالة.', 'Ten selected projects from a portfolio of more than 186. Filter by type, city or status.')}</p>
+      <p class="lead">{t('عشرة مشاريع مختارة من محفظة تتجاوز 186 مشروعاً. صفِّها حسب النوع أو المدينة.', 'Ten selected projects from a portfolio of more than 186. Filter by type or city.')}</p>
     </div>
   </section>
 
@@ -35,10 +35,6 @@ const points = usedCities.map((c) => ({
         <div class="fgroup" data-filter="city"><span>{t('المدينة', 'City')}</span>
           <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
           {usedCities.map((c) => <button class="chip" type="button" data-value={c} aria-pressed="false">{cities[c].name[lang]}</button>)}
-        </div>
-        <div class="fgroup" data-filter="status"><span>{t('الحالة', 'Status')}</span>
-          <button class="chip" type="button" data-value="all" aria-pressed="true">{t('الكل', 'All')}</button>
-          {Object.entries(statuses).map(([k, v]) => <button class="chip" type="button" data-value={k} aria-pressed="false">{v[lang]}</button>)}
         </div>
       </div>
       <div class="result-line">
